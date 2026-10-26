@@ -3,7 +3,7 @@ name: Atualizar Modpack Manifest
 on:
   push:
     paths:
-      - 'mods/**' # Sempre que você mexer na pasta mods, isso roda sozinho
+      - 'mods/**'
 
 jobs:
   generate-manifest:
@@ -12,14 +12,14 @@ jobs:
       - name: Clonar Repositório
         uses: actions/checkout@v4
 
-      - name: Gerar Manifesto Automaticamente
+      - name: Gerar Manifesto com Mods Reais
         run: |
           echo "{" > manifest.json
-          echo '  "packId": "tox-friends-pack",' >> manifest.json
+          echo '  "packId": "ToxFriendsPack",' >> manifest.json
           echo '  "version": "1.$(date +%s)",' >> manifest.json
-          echo '  "minecraftVersion": "26.3",' >> manifest.json
+          echo '  "minecraftVersion": "1.20.1",' >> manifest.json
           echo '  "loader": "Fabric",' >> manifest.json
-          echo '  "loaderVersion": "0.19.5",' >> manifest.json
+          echo '  "loaderVersion": "0.14.21",' >> manifest.json
           echo '  "files": [' >> manifest.json
 
           first=true
@@ -31,10 +31,10 @@ jobs:
                 echo "," >> manifest.json
               fi
               size=$(stat -c%s "$file")
-              filepath=$(echo "$file" | sed 's|\\|/|g')
+              filename=$(basename "$file")
               echo "    {" >> manifest.json
-              echo "      \"path\": \"$filepath\"," >> manifest.json
-              echo "      \"url\": \"https://raw.githubusercontent.com/BG-0o/Minecraft/main/$filepath\"," >> manifest.json
+              echo "      \"path\": \"mods/$filename\"," >> manifest.json
+              echo "      \"url\": \"https://raw.githubusercontent.com/BG-0o/Minecraft/main/mods/$filename\"," >> manifest.json
               echo "      \"sha256\": \"\"," >> manifest.json
               echo "      \"size\": $size" >> manifest.json
               echo "    }" >> manifest.json
@@ -44,8 +44,8 @@ jobs:
           echo "  ]" >> manifest.json
           echo "}" >> manifest.json
 
-      - name: Enviar manifest.json atualizado para o Repositório
+      - name: Enviar manifest.json atualizado
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto-atualização do manifesto de mods"
+          commit_message: "Atualização automática do manifesto com mods reais"
           file_pattern: "manifest.json"
