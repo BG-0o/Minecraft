@@ -12,7 +12,7 @@ jobs:
       - name: Clonar Repositório
         uses: actions/checkout@v4
 
-      - name: Gerar Manifesto com Mods Reais
+      - name: Gerar Manifesto com Mods do CurseForge
         run: |
           echo "{" > manifest.json
           echo '  "packId": "ToxFriendsPack",' >> manifest.json
@@ -47,5 +47,5 @@ jobs:
       - name: Enviar manifest.json atualizado
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Atualização automática do manifesto com mods reais"
+          commit_message: "Atualização automática do manifesto com os mods reais"
           file_pattern: "manifest.json"
