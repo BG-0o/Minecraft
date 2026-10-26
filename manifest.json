@@ -1,15 +1,8 @@
 {
-  "packId": "Minecraft",
-  "version": "1.1",
-  "minecraftVersion": "26.3",
+  "packId": "ToxFriendsPack",
+  "version": "1.0",
+  "minecraftVersion": "1.20.1",
   "loader": "Fabric",
-  "loaderVersion": "0.19.5",
-  "files": [
-    {
-      "path": "mods/exemplo-mod.jar",
-      "url": "https://github.com/BG-0o/Minecraft/releases/download/v1.1/exemplo-mod.jar",
-      "sha256": "",
-      "size": 102400
-    }
-  ]
+  "loaderVersion": "0.14.21",
+  "files": []
 }
