@@ -1,1 +1,51 @@
+name: Atualizar Modpack Manifest
 
+on:
+  push:
+    paths:
+      - 'mods/**' # Sempre que você mexer na pasta mods, isso roda sozinho
+
+jobs:
+  generate-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar Repositório
+        uses: actions/checkout@v4
+
+      - name: Gerar Manifesto Automaticamente
+        run: |
+          echo "{" > manifest.json
+          echo '  "packId": "tox-friends-pack",' >> manifest.json
+          echo '  "version": "1.$(date +%s)",' >> manifest.json
+          echo '  "minecraftVersion": "26.3",' >> manifest.json
+          echo '  "loader": "Fabric",' >> manifest.json
+          echo '  "loaderVersion": "0.19.5",' >> manifest.json
+          echo '  "files": [' >> manifest.json
+
+          first=true
+          for file in mods/*.jar; do
+            if [ -f "$file" ]; then
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "," >> manifest.json
+              fi
+              size=$(stat -c%s "$file")
+              filepath=$(echo "$file" | sed 's|\\|/|g')
+              echo "    {" >> manifest.json
+              echo "      \"path\": \"$filepath\"," >> manifest.json
+              echo "      \"url\": \"https://raw.githubusercontent.com/BG-0o/Minecraft/main/$filepath\"," >> manifest.json
+              echo "      \"sha256\": \"\"," >> manifest.json
+              echo "      \"size\": $size" >> manifest.json
+              echo "    }" >> manifest.json
+            fi
+          done
+
+          echo "  ]" >> manifest.json
+          echo "}" >> manifest.json
+
+      - name: Enviar manifest.json atualizado para o Repositório
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-atualização do manifesto de mods"
+          file_pattern: "manifest.json"
